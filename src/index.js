@@ -105,6 +105,9 @@ const resolvers = {
   Pessoa: {
     livros(parent, args, ctx, info){
       return livros.filter(livro => livro.autor === parent.id)
+    },
+    comentarios(parent, args, ctx, info){
+      return comentarios.filter(comentario => comentario.autor === parent.id)  
     }
   },
   Comentario: {
