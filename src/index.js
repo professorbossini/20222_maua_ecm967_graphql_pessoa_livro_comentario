@@ -82,6 +82,7 @@ const typeDefs = `
   }
   type Mutation {
     inserirPessoa (nome: String!, idade: Int): Pessoa!
+    inserirLivro (titulo: String!, edicao: Int!, autor: ID!): Livro!
   }
 `
 const resolvers = {
@@ -105,6 +106,19 @@ const resolvers = {
       }
       pessoas.push(pessoa)
       return pessoa
+    },
+    inserirLivro (parent, args, ctx, info){
+      const autorExiste = pessoas.some(p => p.id === args.autor)
+      if (!autorExiste)
+        throw new Error ("Autor não existe")
+      const livro = {
+        id: uuidv4(),
+        titulo: args.titulo,
+        edicao: args.edicao,
+        autor: args.autor
+      }
+      livros.push(livro)
+      return livro
     }
   },
   Livro: {
