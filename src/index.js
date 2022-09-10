@@ -1,5 +1,5 @@
 import { createServer } from '@graphql-yoga/node'
-
+import { v4 as uuidv4 } from 'uuid'
 
 const pessoas = [
   {
@@ -80,6 +80,9 @@ const typeDefs = `
     pessoas: [Pessoa!]!
     comentarios: [Comentario!]!
   }
+  type Mutation {
+    inserirPessoa (nome: String!, idade: Int): Pessoa!
+  }
 `
 const resolvers = {
   Query: {
@@ -91,6 +94,17 @@ const resolvers = {
     },
     comentarios(){
       return comentarios
+    }
+  },
+  Mutation: {
+    inserirPessoa(parent, args, ctx, info){
+      const pessoa = {
+        id: uuidv4(),
+        nome: args.nome,
+        idade: args.idade
+      }
+      pessoas.push(pessoa)
+      return pessoa
     }
   },
   Livro: {
