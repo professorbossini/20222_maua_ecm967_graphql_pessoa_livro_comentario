@@ -81,8 +81,27 @@ const typeDefs = `
     comentarios: [Comentario!]!
   }
   type Mutation {
-    inserirPessoa (nome: String!, idade: Int): Pessoa!
-    inserirLivro (titulo: String!, edicao: Int!, autor: ID!): Livro!
+    inserirPessoa (pessoa: InserirPessoaInput): Pessoa!
+    inserirLivro (livro: InserirLivroInput): Livro!
+    inserirComentario(comentario: InserirComentarioInput): Comentario!
+  }
+
+  input InserirPessoaInput{
+    nome: String!
+    idade: Int
+  }
+
+  input InserirLivroInput {
+    titulo: String!
+    edicao: Int!
+    autor: ID!
+  }
+
+  input InserirComentarioInput {
+    texto: String!
+    nota: Int!
+    livro: ID!
+    autor: ID!
   }
 `
 const resolvers = {
@@ -101,8 +120,8 @@ const resolvers = {
     inserirPessoa(parent, args, ctx, info){
       const pessoa = {
         id: uuidv4(),
-        nome: args.nome,
-        idade: args.idade
+        nome: args.pessoa.nome,
+        idade: args.pessoa.idade
       }
       pessoas.push(pessoa)
       return pessoa
@@ -113,13 +132,27 @@ const resolvers = {
         throw new Error ("Autor não existe")
       const livro = {
         id: uuidv4(),
-        titulo: args.titulo,
-        edicao: args.edicao,
-        autor: args.autor
+        titulo: args.livro.titulo,
+        edicao: args.livro.edicao,
+        autor: args.livro.autor
       }
       livros.push(livro)
       return livro
-    }
+    },
+    inserirComentario(parent, args, ctx, info){
+      if (!pessoas.some(p => p.id === args.comentario.autor) || !livros.some(l => l.id === args.comentario.livro)){
+        throw new Error ("Autor e/ou livro inexistente(s)")
+      }
+      const comentario = {
+        id: uuidv4(),
+        texto: args.comentario.texto,
+        nota: args.comentario.nota,
+        livro: args.comentario.livro,
+        autor: args.comentario.autor
+      }
+      comentarios.push(comentario)
+      return comentario
+    },
   },
   Livro: {
     autor(parent, args, ctx, info){
