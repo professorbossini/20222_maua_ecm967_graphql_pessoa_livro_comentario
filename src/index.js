@@ -1,14 +1,13 @@
 import { createServer } from '@graphql-yoga/node'
-import { v4 as uuidv4 } from 'uuid'
+
 import db from './db'
 import Query from './resolvers/Query'
 import Mutation from './resolvers/Mutation'
 import Livro from './resolvers/Livro'
 import Pessoa from './resolvers/Pessoa'
+import Comentario from './resolvers/Comentario'
+import * as fs from 'fs';
 
-const typeDefs = `
-  
-`
 
 const resolvers = {
   Query: Query,
@@ -97,8 +96,11 @@ const resolvers = {
 
 const server = createServer({
   schema: {
-    typeDefs, resolvers, context: {db: db}
-  }
+    typeDefs: fs.readFileSync('./src/schema.graphql', 'utf-8'),
+  resolvers
+  },
+  context: {db: db},
+
 })
 
 server.start(() => console.log("Servidor executando..."))

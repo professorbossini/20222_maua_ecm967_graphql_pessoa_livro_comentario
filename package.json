@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js --exec babel-node"
+    "start": "nodemon src/index.js --ext js,graphql --exec babel-node"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@graphql-tools/schema": "^9.0.4",
     "@graphql-yoga/node": "^2.13.12",
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
