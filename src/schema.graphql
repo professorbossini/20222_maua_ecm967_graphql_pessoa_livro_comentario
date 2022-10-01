@@ -27,12 +27,20 @@ type Query {
 }
 type Mutation {
   inserirPessoa (pessoa: InserirPessoaInput): Pessoa!
+  atualizarPessoa (id: ID!, pessoa: AtualizarPessoaInput!): Pessoa!
   inserirLivro (livro: InserirLivroInput): Livro!
+   atualizarLivro (id: ID!, livro: AtualizarLivroInput!): Livro!
   inserirComentario(comentario: InserirComentarioInput): Comentario!
+  atualizarComentario(id: ID!, comentario: AtualizarComentarioInput!): Comentario!
 }
 
 input InserirPessoaInput{
   nome: String!
+  idade: Int
+}
+
+input AtualizarPessoaInput {
+  nome: String
   idade: Int
 }
 
@@ -42,9 +50,19 @@ input InserirLivroInput {
   autor: ID!
 }
 
+input AtualizarLivroInput {
+  titulo: String
+  edicao: Int
+}
+
 input InserirComentarioInput {
   texto: String!
   nota: Int!
   livro: ID!
   autor: ID!
+}
+
+input AtualizarComentarioInput {
+  texto: String
+  nota: Int
 }
