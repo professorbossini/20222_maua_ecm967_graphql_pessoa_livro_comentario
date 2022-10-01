@@ -5,10 +5,12 @@ import Query from './resolvers/Query'
 import Mutation from './resolvers/Mutation'
 import Livro from './resolvers/Livro'
 import Pessoa from './resolvers/Pessoa'
+import Comentario from './resolvers/Comentario'
+import * as fs from 'fs'
 
-const typeDefs = `
+// const typeDefs = `
   
-`
+// `
 
 const resolvers = {
   Query: Query,
@@ -17,6 +19,17 @@ const resolvers = {
   Pessoa: Pessoa,
   Comentario: Comentario
 }
+
+
+const server = createServer({
+  schema: {
+    typeDefs: fs.readFileSync('./src/schema.graphql', 'utf-8'), resolvers
+  },
+  context: {db: db}
+})
+
+server.start(() => console.log("Servidor executando..."))
+
 
 // const resolvers = {
 //   Query: {
@@ -95,10 +108,3 @@ const resolvers = {
 //   }
 // }
 
-const server = createServer({
-  schema: {
-    typeDefs, resolvers, context: {db: db}
-  }
-})
-
-server.start(() => console.log("Servidor executando..."))
