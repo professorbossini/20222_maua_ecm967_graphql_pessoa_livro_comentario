@@ -20,6 +20,11 @@ const Subscription = {
       //ou seja, subscribers interessados em eventos envolvendo o livro de id 100 não serão notificados quando eventos envolvendo o livro de id 101 acontecerem
       return pubSub.subscribe('comentario', idLivro)
     }
+  },
+  livro: {
+    subscribe (parent, args, {pubSub}, info){
+      return pubSub.subscribe("livro")
+    }
   }
 };
 export default Subscription;

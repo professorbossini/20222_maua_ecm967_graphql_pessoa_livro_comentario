@@ -37,6 +37,7 @@ type Mutation {
 type Subscription {
   dado: Int!
   comentario (idLivro: ID!): Comentario!
+  livro: Livro!
 }
 
 input InserirPessoaInput{

@@ -21,7 +21,6 @@ const Mutation = {
   },
   inserirLivro (parent, args, ctx, info){
     const autorExiste = ctx.db.pessoas.some(p => p.id === args.livro.autor)
-    console.log(autorExiste)
     if (!autorExiste)
       throw new Error ("Autor não existe")
     const livro = {
@@ -31,6 +30,7 @@ const Mutation = {
       autor: args.livro.autor
     }
     ctx.db.livros.push(livro)
+    ctx.pubSub.publish(`livro`, {livro})
     return livro
   },
   atualizarLivro (parent, {id, livro}, ctx, info){
