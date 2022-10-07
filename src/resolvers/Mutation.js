@@ -30,7 +30,10 @@ const Mutation = {
       autor: args.livro.autor
     }
     ctx.db.livros.push(livro)
-    ctx.pubSub.publish(`livro`, {livro})
+    ctx.pubSub.publish(`livro`, {livro: {
+      mutation: "insercao",
+      data: livro
+    }})
     return livro
   },
   atualizarLivro (parent, {id, livro}, ctx, info){
@@ -39,6 +42,12 @@ const Mutation = {
     if (!livroExistente)
       throw new Error ("Livro não existe")
     Object.assign(livroExistente, { titulo: livro.titulo || livroExistente.titulo, edicao: livro.edicao || livroExistente.edicao});
+    ctx.pubSub.publish('livro', {
+      livro: {
+        mutation: "atualizacao",
+        data: livroExistente
+      }
+    })
     return livroExistente;
   },
   inserirComentario(parent, args, ctx, info){
@@ -53,16 +62,27 @@ const Mutation = {
       autor: args.comentario.autor
     }
     ctx.db.comentarios.push(comentario)
-    ctx.pubSub.publish(`comentario`, args.comentario.livro, {comentario})
+    ctx.pubSub.publish (`comentario`, args.comentario.livro, {
+      comentario: {
+        mutation: "insercao",
+        data: comentario
+      }
+    });
     return comentario
   },
-  atualizarComentario (parent, {id, comentario}, {db}, info){
+  atualizarComentario (parent, {id, comentario}, {db, pubSub}, info){
     const comentarioExistente = db.comentarios.find (l => l.id === id);
     if (!comentarioExistente)
       throw new Error ("Comentario não existe")
     Object.assign (comentarioExistente, {
       texto: comentario.texto || comentarioExistente.texto,
       nota: comentario.nota || comentarioExistente.nota
+    });
+       pubSub.publish(`comentario`, comentarioExistente.livro, {
+      comentario: {
+        mutation: "atualizacao",
+        data: comentarioExistente
+      }
     });
     return comentarioExistente;
 
