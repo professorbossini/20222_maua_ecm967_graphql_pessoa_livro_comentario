@@ -1,34 +1,41 @@
-import { createServer } from '@graphql-yoga/node'
-import { v4 as uuidv4 } from 'uuid'
+import { 
+  createServer,
+  createPubSub 
+} from '@graphql-yoga/node'
+// import { v4 as uuidv4 } from 'uuid'
 import db from './db'
 import Query from './resolvers/Query'
 import Mutation from './resolvers/Mutation'
+import Subscription from './resolvers/Subscription'
 import Livro from './resolvers/Livro'
 import Pessoa from './resolvers/Pessoa'
 import Comentario from './resolvers/Comentario'
 import * as fs from 'fs'
 
-// const typeDefs = `
-  
-// `
+const pubSub = createPubSub()
 
 const resolvers = {
-  Query: Query,
-  Mutation: Mutation,
-  Livro: Livro,
-  Pessoa: Pessoa,
-  Comentario: Comentario
+  Query,
+  Mutation,
+  Subscription,
+  Livro,
+  Pessoa,
+  Comentario
 }
 
 
 const server = createServer({
   schema: {
-    typeDefs: fs.readFileSync('./src/schema.graphql', 'utf-8'), resolvers
+    typeDefs: fs.readFileSync('./src/schema.graphql', 'utf-8'), 
+    resolvers
   },
-  context: {db: db}
+  context: {
+    db: db,
+    pubSub: pubSub
+  }
 })
 
-server.start(() => console.log("Servidor executando..."))
+server.start()
 
 
 // const resolvers = {

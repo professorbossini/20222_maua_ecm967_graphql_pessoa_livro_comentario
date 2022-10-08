@@ -50,6 +50,7 @@ const Mutation = {
       autor: args.comentario.autor
     }
     ctx.db.comentarios.push(comentario)
+    ctx.pubSub.publish('comentario', args.comentario.livro, {comentario})
     return comentario
   },
   atualizarComentario(parent, {id, comentario}, { db }, info){

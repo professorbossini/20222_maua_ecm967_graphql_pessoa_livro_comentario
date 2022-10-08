@@ -34,6 +34,11 @@ type Mutation {
   atualizarComentario(id: ID!, comentario: AtualizarComentarioInput!): Comentario!
 }
 
+type Subscription {
+  dado: Int!
+  comentario(idLivro: ID!): Comentario!  
+}
+
 input InserirPessoaInput{
   nome: String!
   idade: Int
