@@ -36,7 +36,13 @@ type Mutation {
 
 type Subscription {
   dado: Int!
-  comentario(idLivro: ID!): Comentario!  
+  comentario(idLivro: ID!): Comentario!
+  livro: LivroSubscriptionPayload! 
+}
+
+type LivroSubscriptionPayload{
+  mutation: String!,
+  data: Livro!
 }
 
 input InserirPessoaInput{

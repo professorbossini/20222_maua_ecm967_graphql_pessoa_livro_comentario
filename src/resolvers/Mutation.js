@@ -18,7 +18,10 @@ const Mutation = {
     return pessoa
   },
   inserirLivro (parent, args, ctx, info){
-    const autorExiste = ctx.db.pessoas.some(p => p.id === args.autor)
+    console.log(ctx.db.pessoas)
+    console.log(args.autor)
+    const autorExiste = ctx.db.pessoas.some(p => p.id === args.livro.autor)
+    console.log(autorExiste)
     if (!autorExiste)
       throw new Error ("Autor não existe")
     const livro = {
@@ -27,7 +30,12 @@ const Mutation = {
       edicao: args.livro.edicao,
       autor: args.livro.autor
     }
+    console.log("livro")
     ctx.db.livros.push(livro)
+    ctx.pubSub.publish('livro', {livro: {
+      mutation: 'insercao',
+      data: livro
+    }})
     return livro
   },
   atualizarLivro(parent, {id, livro}, ctx, info){
@@ -36,6 +44,12 @@ const Mutation = {
     if (!livroExistente)
       throw new Error ("Livro não existe")
     Object.assign(livroExistente, {titulo: livro.titulo || livroExistente.titulo, edicao: livro.edicao || livroExistente.edicao})
+    ctx.pubSub.publish('livro', {
+      livro: {
+        mutation: 'atualizacao',
+        data: livroExistente
+      }
+    })
     return livroExistente
   },
   inserirComentario(parent, args, ctx, info){

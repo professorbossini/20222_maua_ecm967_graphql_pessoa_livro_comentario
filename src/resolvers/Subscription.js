@@ -21,6 +21,11 @@ const Subscription = {
         throw new Error ("Livro não existe")
       return pubSub.subscribe('comentario', idLivro)
     }
+  },
+  livro: {
+    subscribe(parent, args, { pubSub }, info){
+      return pubSub.subscribe('livro')
+    }
   }  
 }
 
